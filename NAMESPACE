@@ -2,6 +2,8 @@
 
 export("%>%")
 export(add_image)
+export(plot_highchart)
+export(plot_multichart)
 export(pull_kantar)
 export(render_images)
 export(save_gifs)
