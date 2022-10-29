@@ -1,0 +1,25 @@
+---
+title: "Kantar Competitive Review"
+output: html_document
+params:
+  data: data
+---
+
+```{r, setup, include = FALSE}
+library(tidyverse)
+dat <- params$data$image_out
+spend <- params$data$spend
+list_to_output <- split(dat, dat$advertiser)
+```
+
+```{r}
+# The `params` object is available in the document.
+list_to_output
+```
+
+
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = FALSE}
+files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
+ff <- files[which(stringr::str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[2]))]
+knitr::include_graphics(ff)
+```
