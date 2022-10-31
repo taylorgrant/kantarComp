@@ -101,7 +101,7 @@ knitr::include_graphics(ff)
 
 #### `r nms[3]`
 
-```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = TRUE}
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = FALSE}
 # we are splitting ads into three sizes; anything with width < 600
 # is appended into rows of size n
 # anything larger is stacked vertically
@@ -111,7 +111,7 @@ render_images(list_to_output[[3]], size = 600, group = "c", n = 1, stack_yn = TR
 
 ```
 
-```{r, out.width = "90%", fig.align = "center", cache = TRUE}
+```{r, out.width = "90%", fig.align = "center", cache = FALSE}
 files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
 ff <- files[which(str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[3]))]
 knitr::include_graphics(ff)
