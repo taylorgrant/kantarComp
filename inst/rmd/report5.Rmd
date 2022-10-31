@@ -1,0 +1,154 @@
+---
+title: "Kantar Competitive Review"
+output: 
+  html_document:
+    theme: flatly
+params:
+  data: data
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 80% !important;
+  margin: auto;
+}
+</style>
+
+```{r, setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE, # Default: TRUE
+  include = TRUE, # Default: TRUE
+  warning = FALSE, 
+  message = FALSE)
+
+pacman::p_load(tidyverse, janitor, here, glue, DT, htmltools, magick)
+
+dat <- params$data$image_out
+spend <- params$data$spend
+list_to_output <- split(dat, dat$advertiser)
+# get names of each competitor for button headings
+nms <- names(list_to_output)
+```
+
+This is a visual look at the digital static and gif display of the following advertisers: **`r nms`**. 
+
+The data comes from Kantar. Unfortunately, this review *does not* contain video assets, nor does it contain rich HTML placements, both of which are hosted on a password protected server with a naming convention that doesn't contain a unique, creative ID. 
+
+## {.tabset .tabset-pills}
+
+### Spend Data {.tabset .tabset-pills}
+
+#### Advertiser
+
+```{r}
+spend_table(spend, "advertiser")
+```
+
+#### Brand 
+
+```{r}
+spend_table(spend, "brand")
+```
+
+#### Product
+
+```{r}
+spend_table(spend, "product")
+```
+
+#### Media
+
+```{r}
+spend_table(spend, "media")
+```
+
+### Imagery {.tabset .tabset-pills}
+
+#### `r nms[1]`
+
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = FALSE}
+# we are splitting ads into three sizes; anything with width < 600
+# is appended into rows of size n
+# anything larger is stacked vertically
+render_images(list_to_output[[1]], size = 175, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[1]], size = 300, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[1]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+```
+
+```{r, out.width = "90%", fig.align = "center", cache = FALSE}
+files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
+ff <- files[which(str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[1]))] 
+knitr::include_graphics(ff)
+```
+
+#### `r nms[2]`
+
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = FALSE}
+# we are splitting ads into three sizes; anything with width < 600
+# is appended into rows of size n
+# anything larger is stacked vertically
+render_images(list_to_output[[2]], size = 175, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[2]], size = 300, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[2]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+```
+
+```{r, out.width = "90%", fig.align = "center", cache = FALSE}
+files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
+ff <- files[which(str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[2]))]
+knitr::include_graphics(ff)
+```
+
+#### `r nms[3]`
+
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = TRUE}
+# we are splitting ads into three sizes; anything with width < 600
+# is appended into rows of size n
+# anything larger is stacked vertically
+render_images(list_to_output[[3]], size = 175, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[3]], size = 300, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[3]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+
+```
+
+```{r, out.width = "90%", fig.align = "center", cache = TRUE}
+files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
+ff <- files[which(str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[3]))]
+knitr::include_graphics(ff)
+```
+
+#### `r nms[4]`
+
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = TRUE}
+# we are splitting ads into three sizes; anything with width < 600
+# is appended into rows of size n
+# anything larger is stacked vertically
+render_images(list_to_output[[4]], size = 175, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[4]], size = 300, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[4]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+
+```
+
+```{r, out.width = "90%", fig.align = "center", cache = TRUE}
+files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
+ff <- files[which(str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[4]))] 
+knitr::include_graphics(ff)
+```
+
+#### `r nms[5]`
+
+```{r, eval = TRUE, out.width = "90%", fig.align = "center", cache = TRUE}
+# we are splitting ads into three sizes; anything with width < 600
+# is appended into rows of size n
+# anything larger is stacked vertically
+render_images(list_to_output[[5]], size = 175, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[5]], size = 300, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[5]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+
+```
+
+```{r, out.width = "90%", fig.align = "center", cache = TRUE}
+files <- dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE)
+ff <- files[which(str_detect(dir(here::here("kantar_gifs"), pattern = "*.gif", full.names = TRUE), names(list_to_output)[5]))] 
+knitr::include_graphics(ff)
+```
