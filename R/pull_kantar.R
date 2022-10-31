@@ -43,7 +43,6 @@ pull_kantar <- function(filename) {
     cat("Reading image info...\n")
     image_out <- test %>%
       dplyr::filter(media == "Internet - Display") %>%
-      # dplyr::sample_n(5) %>%
       dplyr::mutate(creative = gsub(".*\\#", "", creative),
              link = paste0("http://www.evaliant.net/creatives/displayadimg.aspx?id=",creative,"&rc=us")) %>%
       dplyr::mutate(info = purrr::map(link, try_read)) %>%
