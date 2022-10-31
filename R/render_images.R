@@ -52,7 +52,7 @@ render_images <- function(tbl, size, group, n, stack_yn) {
   ids <- rep(1:ceiling(nrow(tmp)/n), each = n)[1:nrow(tmp)] # defines columns
 
   tmp <- tmp %>%
-    dplyr::ungroup %>%
+    dplyr::ungroup() %>%
     dplyr::mutate(id = ids)
 
   advert_list <- split(tmp, tmp$id)
