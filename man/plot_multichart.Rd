@@ -9,7 +9,7 @@ plot_multichart(tbl, ...)
 \arguments{
 \item{tbl}{Spend data in tibble}
 
-\item{...}{Multiple groups}
+\item{...}{Multiple groups, either brand & product or brand & media}
 }
 \value{
 Highchart object
