@@ -13,20 +13,48 @@ kantarApp <- function(...) {
         shiny::downloadButton("report", "Generate Report")
       ),
       shiny::mainPanel(
-        shiny::tabsetPanel(
-          shiny::tabPanel("Advertiser",
-                          highcharter::highchartOutput("advertiser", height = "450px")
+        shiny::fluidRow(
+          title = "Plots",
+          shiny::column(width = 11,
+                 shiny::tabsetPanel(
+                   shiny::tabPanel("Advertiser",
+                                   highcharter::highchartOutput("advertiser", height = "450px")
+                                   ),
+                   shiny::tabPanel("Brand",
+                                   highcharter::highchartOutput("brand", height = "450px")
+                                   ),
+                   shiny::tabPanel("Product",
+                                   highcharter::highchartOutput("product", height = "450px")
+                                   ),
+                   shiny::tabPanel("Media",
+                                   highcharter::highchartOutput("media", height = "450px")
+                   )
+                   )
+                 )
           ),
-          shiny::tabPanel("Brand",
-                          highcharter::highchartOutput("brand", height = "450px")
-          ),
-          shiny::tabPanel("Product",
-                          highcharter::highchartOutput("product", height = "450px")
-          ),
+        shiny::fluidRow(
+          title = "Tables",
+          shiny::column(width = 11,
+                 shiny::tabsetPanel(
+                   shiny::tabPanel("Advertiser",
+                                   DT::dataTableOutput("advertiser_tbl")
+                                   ),
+                   shiny::tabPanel("Brand",
+                                   DT::dataTableOutput("brand_tbl")
+                                   ),
+                   shiny::tabPanel("Product",
+                                   DT::dataTableOutput("product_tbl")
+                                   ),
+                   shiny::tabPanel("Media",
+                                   DT::dataTableOutput("media_tbl")
+                   )
+                   )
+                 )
+          )
         )
       )
     )
-  )
+
 
   server = function(input, output, session) {
 
@@ -74,20 +102,42 @@ kantarApp <- function(...) {
     output$product <- highcharter::renderHighchart({
       plot_multichart(data_out()$spend, brand, product)
     })
+    output$media <- highcharter::renderHighchart({
+      plot_multichart(data_out()$spend, brand, media)
+    })
 
+    # tables of spend data
+    output$advertiser_tbl <- DT::renderDT({
+      spend_table(data_out()$spend, "advertiser")
+    })
+    output$brand_tbl <- DT::renderDT({
+      spend_table(data_out()$spend, "brand")
+    })
+    output$product_tbl <- DT::renderDT({
+      spend_table(data_out()$spend, "product")
+    })
+    output$media_tbl <- DT::renderDT({
+      spend_table(data_out()$spend, "media")
+    })
 
+    brandcount <- reactive({
+      length(unique(data_out()$image_out$advertiser))
+    })
 
-    output$report <- shiny::downloadHandler(
+    # download handler for rmarkdown
+    output$report <-shiny::downloadHandler(
       # For PDF output, change this to "report.pdf"
       filename = "report.html",
       content = function(file) {
         # Copy the report file to a temporary directory before processing it, in
         # case we don't have write permissions to the current working dir (which
         # can happen when deployed).
-        # system.file("rmd", "report.Rmd", package="kantarComp")
-        # tempReport <- file.path(tempdir(), "report.Rmd")
-        tempReport <- system.file("rmd", "report.Rmd", package="kantarComp")
-        file.copy("report.Rmd", tempReport, overwrite = TRUE)
+        tempReport <- system.file("rmd", switch(brandcount(),
+                                                "report.Rmd", "report2.Rmd", "report3.Rmd",
+                                                "report4.Rmd", "report5.Rmd"),
+                                  package="kantarComp")
+        file.copy(switch(brandcount(), "report.Rmd", "report2.Rmd", "report3.Rmd",
+                         "report4.Rmd", "report5.Rmd"), tempReport, overwrite = TRUE)
 
         # Set up parameters to pass to Rmd document
         params <- list(data = data_out())
@@ -101,6 +151,7 @@ kantarApp <- function(...) {
         )
       }
     )
+
   }
 
   shiny::shinyApp(ui, server)
