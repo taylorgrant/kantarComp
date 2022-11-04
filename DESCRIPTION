@@ -28,7 +28,6 @@ Imports:
     shiny,
     shinycssloaders,
     stringr,
-    tibble,
     tidyr,
-    tidyxl,
+    utils,
     zoo
