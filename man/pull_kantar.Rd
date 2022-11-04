@@ -4,10 +4,12 @@
 \alias{pull_kantar}
 \title{Extract Kantar Data}
 \usage{
-pull_kantar(filename)
+pull_kantar(filename, asset_count)
 }
 \arguments{
 \item{filename}{The path and file name of the Kantar data pull.}
+
+\item{asset_count}{Number of assets per advertiser; selected via slider input in app}
 }
 \value{
 A list with two tibbles of data; "image_out" contains the \code{magick} information for each image or gif used by an advertiser; "spend" is summarized spend data for each quarter
