@@ -71,9 +71,9 @@ spend_table(spend, "media")
 # we are splitting ads into three sizes; anything with width < 600
 # is appended into rows of size n
 # anything larger is stacked vertically
-render_images(list_to_output[[1]], size = 175, group = "a", n = 4, stack_yn = TRUE)
-render_images(list_to_output[[1]], size = 300, group = "b", n = 2, stack_yn = TRUE)
-render_images(list_to_output[[1]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+render_images(list_to_output[[1]], size = 300, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[1]], size = 500, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[1]], size = 700, group = "c", n = 1, stack_yn = TRUE)
 ```
 
 ```{r, out.width = "90%", fig.align = "center", cache = FALSE}
@@ -88,9 +88,9 @@ knitr::include_graphics(ff)
 # we are splitting ads into three sizes; anything with width < 600
 # is appended into rows of size n
 # anything larger is stacked vertically
-render_images(list_to_output[[2]], size = 175, group = "a", n = 4, stack_yn = TRUE)
-render_images(list_to_output[[2]], size = 300, group = "b", n = 2, stack_yn = TRUE)
-render_images(list_to_output[[2]], size = 600, group = "c", n = 1, stack_yn = TRUE)
+render_images(list_to_output[[2]], size = 300, group = "a", n = 4, stack_yn = TRUE)
+render_images(list_to_output[[2]], size = 500, group = "b", n = 2, stack_yn = TRUE)
+render_images(list_to_output[[2]], size = 700, group = "c", n = 1, stack_yn = TRUE)
 ```
 
 ```{r, out.width = "90%", fig.align = "center", cache = FALSE}
