@@ -62,7 +62,8 @@ kantarApp <- function(...) {
   server = function(input, output, session) {
 
     shiny::showModal(shiny::modalDialog(shiny::HTML("<p style='color:red;'><b>Important:</b> Please open the file downloaded from Kantar and resave it.
-                                                    The Kantar excel download is missing a necessary XML file. After you resave the file, it can be read in.</p><b>What is this?</b><br>This is an app that will ingest and process Kantar competitive
+                                                    The Kantar excel download is missing a necessary XML file. After you resave the file, it can be read in.</p><hr>
+                                                    <b>What is this?</b><br>This is an app that will ingest and process Kantar competitive
                                    data. The app will read in all available spend data for each advertiser, and will also scan through
                                    and render up to 100 digital banners or gifs per advertiser that ran during the previous quarter.<br><br>
                                    <b>What do I need to do?</b><br>First, select the maximum number of assets that should be rendered in the report. The assets
