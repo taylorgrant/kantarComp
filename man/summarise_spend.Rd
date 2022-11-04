@@ -4,12 +4,10 @@
 \alias{summarise_spend}
 \title{Summarise Quarterly Spend}
 \usage{
-summarise_spend(tbl, row)
+summarise_spend(tbl)
 }
 \arguments{
 \item{tbl}{Kantar data pull used in the \code{pull_kantar} function}
-
-\item{row}{The row number where the data starts; determined in the \code{pull_kantar} function}
 }
 \value{
 Tibble of summarized quarterly spend
