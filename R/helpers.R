@@ -2,7 +2,6 @@
 #' @description Function to summarise quarterly ad spend. Can then group and summarise further as necessary.
 #'
 #' @param tbl Kantar data pull used in the `pull_kantar` function
-#' @param row The row number where the data starts; determined in the `pull_kantar` function
 #'
 #' @return Tibble of summarized quarterly spend
 #' @export
@@ -11,10 +10,8 @@
 #' \dontrun{
 #' summarise_spend("path-to-kantar.xlsx", row = 7)
 #' }
-summarise_spend <- function(tbl, row) {
-  tbl[-c(1:row - 1, nrow(tbl)),] %>%
-    janitor::row_to_names(row_number = 1) %>%
-    janitor::clean_names() %>%
+summarise_spend <- function(tbl) {
+  tbl %>%
     tidyr::pivot_longer(-c(parent:creative),
                  names_to = "quarter",
                  values_to = "spend") %>%
@@ -22,10 +19,12 @@ summarise_spend <- function(tbl, row) {
            quarter = stringr::str_replace_all(quarter, "qtr_", ""),
            quarter = zoo::as.yearqtr(quarter, format = "%q_%Y"),
            quarter = factor(quarter),
-           spend = as.numeric(spend)) %>%
-    tidyr::separate(product, into = c("brand", "product"), sep = " : ") %>%
+           spend = as.numeric(spend),
+           product = trimws(gsub(".*\\:", "", product))) %>%
     dplyr::group_by(advertiser, brand, product, media, quarter) %>%
-    dplyr::summarise(spend = round(sum(spend, na.rm = TRUE)))
+    dplyr::arrange(quarter, .by_group = TRUE) %>%
+    dplyr::summarise(spend = round(sum(spend, na.rm = TRUE))) %>%
+    dplyr::filter(spend > 0)
 }
 
 #' Add Image
@@ -166,6 +165,8 @@ spend_table <- function(tbl, choice) {
   if (choice == "advertiser") {
     # advertiser
     out <- tbl %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(advertiser = toupper(advertiser)) %>%
       dplyr::group_by(advertiser, quarter) %>%
       dplyr::summarise(spend = sum(spend)) %>%
       tidyr::pivot_wider(id_cols = advertiser,
@@ -175,6 +176,8 @@ spend_table <- function(tbl, choice) {
   } else if (choice == "brand") {
     # brand
     out <- tbl %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(brand = toupper(brand)) %>%
       dplyr::group_by(brand, quarter) %>%
       dplyr::summarise(spend = sum(spend)) %>%
       tidyr::pivot_wider(id_cols = brand,
@@ -183,27 +186,31 @@ spend_table <- function(tbl, choice) {
       dplyr::rename(Brand = brand)
   } else if (choice == 'media') {
     out <- tbl %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(dplyr::across(brand:media, toupper)) %>%
       dplyr::group_by(brand, media, quarter) %>%
       dplyr::summarise(spend = sum(spend)) %>%
-      tidyr::unite("media", brand:media, sep = "-") %>%
+      tidyr::unite("media", brand:media, sep = "|") %>%
       tidyr::pivot_wider(id_cols = media,
                          names_from = quarter,
                          values_from = spend) %>%
-      tidyr::separate(media, into = c("Brand", "Media"), sep = "-")
+      tidyr::separate(media, into = c("Brand", "Media"), sep = "\\|")
   } else {
     out <- tbl %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(dplyr::across(brand:media, toupper)) %>%
       dplyr::group_by(brand, product, quarter) %>%
       dplyr::summarise(spend = sum(spend)) %>%
-      tidyr::unite("product", brand:product, sep = "-") %>%
+      tidyr::unite("product", brand:product, sep = "|") %>%
       tidyr::pivot_wider(id_cols = product,
                   names_from = quarter,
                   values_from = spend) %>%
-      tidyr::separate(product, into = c("Brand", "Product"), sep = "-")
+      tidyr::separate(product, into = c("Brand", "Product"), sep = "\\|")
   }
   dt <- out %>%
     DT::datatable(extensions = "Buttons",
                   rownames = FALSE,
-                  options = list(dom = "Blrtip",
+                  options = list(dom = "Blrftip",
                                  buttons = c('excel'),
                   columnDefs = list(list(width = '150px', targets = c(0,1)))),
                   caption = "Quarterly Spend ($1000's)")
