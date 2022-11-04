@@ -21,7 +21,6 @@ save_gifs <- function(tbl) {
     dplyr::filter(selector == "keep") %>%
     dplyr::select(-c(id, selector)) %>%
     dplyr::arrange(product, width, height, nrow) %>%
-    tidyr::nest(info = colorspace:density) %>%
     dplyr::mutate(group = ifelse(width < 600, "a", "b"),
                   group = ifelse(width > 1000, "c", group))
 
@@ -44,9 +43,9 @@ save_gifs <- function(tbl) {
 
     } else {
       # create folder if not here
-      figfolder <- file.path(here::here(), "kantar_gifs")
+      gif_folder <- file.path(here::here(), "kantar_gifs")
       dir_create <- function(x) ifelse(!dir.exists(x), dir.create(x), FALSE)
-      dir_create(figfolder)
+      dir_create(gif_folder)
 
       # function to build gifs
       append_to_gif <- function(tbl, size) {
@@ -66,7 +65,9 @@ save_gifs <- function(tbl) {
       purrr::map2(advert_list, size, append_to_gif)
     }
   }
-  tmpdf <- tibble::tibble(grp = c("a", "b", "c"),
-                          size = c(175, 300, 300)) # to minimize file size
-  purrr::walk2(tmpdf$grp, tmpdf$size, bygroup, data = out)
+  out <- out %>%
+    dplyr::mutate(size = dplyr::case_when(group == "a" ~ 300,
+                            group == "b" ~ 500,
+                            TRUE ~ 700))
+  purrr::walk2(out$group, out$size, bygroup, data = out)
 }
